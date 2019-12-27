@@ -1,8 +1,18 @@
-const config = require('../config/')
 const querystring = require('querystring')
 const crypto = require('crypto')
 const convert = require('xml-js')
+const QRCode = require('qrcode')
+const getRawBody = require('raw-body')
+const contentType = require('content-type')
+
+const config = require('../config/')
 const { post } = require('../utils/http')
+const io = require('../utils/socket')
+
+let client = null
+io.on('connection', socket => {
+  client = socket
+})
 
 const {
   genNonceStr,
@@ -91,5 +101,33 @@ exports.payment = async (ctx, next) => {
   })
 
   let { code_url } = xml2js(result.data)
-  console.log(code_url)
+  
+  let imgurl = await QRCode.toDataURL(code_url)
+
+  await ctx.render('qrcode', {
+    imgurl
+  })
+}
+
+exports.notify = async (ctx, next) => {
+
+  let result = await getRawBody(ctx.req, {
+    length: ctx.req.headers['content-length'],
+    limit: '1mb',
+    encoding: contentType.parse(ctx.req).parameters.charset
+  })
+
+  let notifyResult = xml2js(result)
+  
+  let sign = notifyResult.sign
+  delete notifyResult.sign
+  let mySign = genSign(notifyResult)
+
+  if (sign === mySign.toUpperCase()) {
+    ctx.set('Content-type', 'text/plain')
+    ctx.body = '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>'
+    client.emit('getMsg', 'success')
+  } else {
+    ctx.body = '<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[ERROR]]></return_msg></xml>'
+  }
 }

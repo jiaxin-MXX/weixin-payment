@@ -5,9 +5,17 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
+    "content-type": "^1.0.4",
+    "ejs": "^3.0.1",
     "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa-views": "^6.2.1",
+    "qrcode": "^1.4.4",
     "randomstring": "^1.1.5",
+    "raw-body": "^2.4.1",
+    "socket.io": "^2.3.0",
     "xml-js": "^1.6.11"
   }
 }
