@@ -45,11 +45,11 @@ const genXml = (_prepay, sign) => {
       sign
     }
   }
-
-  const xmlBody = convert.js2xml(dataObj, {
+  
+const xmlBody = convert.js2xml(dataObj, {
     compact: true
   })
-
+  // console.log(xmlBody)
   return xmlBody
 }
 
@@ -84,8 +84,8 @@ exports.payment = async (ctx, next) => {
     appid,
     mch_id,
     nonce_str,
-    body,
-    out_trade_no,
+    body:'一听可乐',
+    out_trade_no:'12312',
     total_fee,
     notify_url,
     trade_type
@@ -99,7 +99,7 @@ exports.payment = async (ctx, next) => {
     url: config.unifiedorder,
     data: xmlBody
   })
-
+  
   let { code_url } = xml2js(result.data)
   
   let imgurl = await QRCode.toDataURL(code_url)
