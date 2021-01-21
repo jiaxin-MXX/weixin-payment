@@ -15,7 +15,7 @@
     "qrcode": "^1.4.4",
     "randomstring": "^1.1.5",
     "raw-body": "^2.4.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "xml-js": "^1.6.11"
   }
 }
